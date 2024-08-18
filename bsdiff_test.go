@@ -87,9 +87,9 @@ func TestPatch_Patch(t *testing.T) {
 	}
 	for i, tt := range tests {
 		got := Diff(tt.a, tt.b)
-		c := got.Patch(tt.a)
+		c := got.Apply(tt.a)
 		if !reflect.DeepEqual(c, tt.c) {
-			t.Errorf("#%d: Patch() = %v, want %v", i, c, tt.c)
+			t.Errorf("#%d: Apply() = %v, want %v", i, c, tt.c)
 		}
 	}
 }
@@ -107,9 +107,9 @@ func TestPatch_Patch2(t *testing.T) {
 	}
 	for i, tt := range tests {
 		got := Diff(tt.a, tt.b)
-		c := got.Patch(tt.a)
+		c := got.Apply(tt.a)
 		if !reflect.DeepEqual(c, tt.b) {
-			t.Errorf("#%d: Patch() = %s, want %s", i, c, tt.b)
+			t.Errorf("#%d: Apply() = %s, want %s", i, c, tt.b)
 		}
 	}
 }
@@ -164,6 +164,22 @@ func BenchmarkPatch_Diff1MB(b *testing.B) {
 	}
 	for i := 0; i < 2000; i++ {
 		c[rand.Intn(2000)] = 1
+	}
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		Diff(a, c)
+	}
+}
+
+func BenchmarkPatch_Diff6MB(b *testing.B) {
+	a := make([]byte, 1024*1024*6)
+	c := make([]byte, 1024*1024*6)
+	for i := 0; i < 20000; i++ {
+		a[rand.Intn(20000)] = 1
+	}
+	for i := 0; i < 20000; i++ {
+		c[rand.Intn(20000)] = 1
 	}
 	b.ReportAllocs()
 	b.ResetTimer()

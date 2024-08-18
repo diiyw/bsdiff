@@ -3,7 +3,7 @@ package bsdiff
 import (
 	"encoding/binary"
 
-	"github.com/RoaringBitmap/roaring"
+	"github.com/RoaringBitmap/roaring/v2"
 )
 
 func Diff(a, b []byte) *Patch {
@@ -81,7 +81,7 @@ func FromBytes(b []byte) *Patch {
 	}
 }
 
-func (p *Patch) Patch(a []byte) []byte {
+func (p *Patch) Apply(a []byte) []byte {
 	if p.size == 0 {
 		return []byte{}
 	}
